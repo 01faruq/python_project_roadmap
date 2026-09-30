@@ -1,4 +1,6 @@
+import json
 def main():
+    load_expenses()
     while True:
         user_input = get_user_input()
         if user_input == 7:
@@ -121,14 +123,32 @@ def delete_expenses(): # Return the deleted dic
     print(f"\n{item_to_delete} Deleted")
     return item_to_delete
 
+
 def save_expenses():
-    pass
+    if len(all_expenses) == 0:
+        print("No expenses to save.")
+        return
+        
+    try:
     
-    print("expenses saved")
-def delete_last_saved_expense():
-    pass
-            
-            
+        with open("expenses.json", "w") as file:
+            json.dump(all_expenses, file, indent=4)
+        print("Expenses saved successfully to 'expenses.json'!")
+    except Exception as e:
+        print(f"An error occurred while saving: {e}")
+
+def load_expenses():
+    global all_expenses 
+    try:
+        with open("expenses.json", "r") as file:
+            all_expenses = json.load(file)
+        print("Previous expenses loaded successfully!")
+    except FileNotFoundError:
+        print("No saved file found. Starting with an empty list.")
+    except json.JSONDecodeError:
+        print("The save file is corrupted. Starting with an empty list.")
+    except Exception as e:
+        print(f"An error occurred while loading: {e}") 
             
             
 
